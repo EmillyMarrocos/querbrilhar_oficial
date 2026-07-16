@@ -83,15 +83,6 @@
   .mini-card h4{font-size:15px;margin-bottom:6px;}
   .mini-card p{font-size:13px;color:#5c5147;line-height:1.5;}
 
-  .waitlist{background:var(--bege);color:var(--branco);border-radius:28px;padding:56px 8%;text-align:center;}
-  .waitlist h2{font-size:clamp(26px,3.4vw,34px);margin-bottom:12px;}
-  .waitlist p{font-size:14.5px;color:rgba(255,255,255,0.88);max-width:480px;margin:0 auto 30px;line-height:1.6;}
-  .form{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
-  .form input{padding:15px 18px;border-radius:100px;border:none;font-family:'Poppins',sans-serif;font-size:14px;outline:none;}
-  .form button{background:var(--preto);color:var(--branco);padding:15px 18px;border-radius:100px;border:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:14.5px;transition:transform .2s ease;}
-  .form button:hover{transform:translateY(-2px);}
-  .form .note{font-size:11.5px;color:rgba(255,255,255,0.7);margin-top:4px;}
-
   footer{background:var(--preto);color:rgba(255,255,255,0.55);padding:30px 0;font-size:12px;text-align:center;}
   footer a{color:var(--branco);font-weight:500;}
 
@@ -99,7 +90,6 @@
     .mini-grid{grid-template-columns:1fr;}
     .products-grid{grid-template-columns:1fr;}
     section{padding:52px 0;}
-    .waitlist{padding:40px 6%;border-radius:20px;margin:0 12px;}
     .freight-strip{flex-direction:column;gap:6px;}
     .product-card-img{height:220px;}
   }
@@ -236,37 +226,11 @@
   </div>
 </section>
 
-<section id="lista">
-  <div class="wrap">
-    <div class="waitlist">
-      <h2>Ficou de fora?</h2>
-      <p>Se as 5 vagas de lançamento esgotarem, deixa seu nome aqui que você entra na fila e é chamada assim que abrir a próxima leva.</p>
-      <form class="form" id="waitlistForm">
-        <input type="text" id="nomeInput" placeholder="Seu nome" required>
-        <input type="tel" id="whatsInput" placeholder="Seu WhatsApp (com DDD)" required>
-        <button type="submit">Entrar na fila de espera ✦</button>
-        <div class="note">Ao entrar, você será redirecionada pro WhatsApp da Quer Brilhar para confirmar seu lugar na fila.</div>
-      </form>
-    </div>
-  </div>
-</section>
-
 <footer>
   <div class="wrap">
     <div>© 2026 Quer Brilhar · Paulista/PE · <a href="https://www.instagram.com/querbrilhar" target="_blank">@querbrilhar</a></div>
   </div>
 </footer>
-
-<script>
-  document.getElementById('waitlistForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const nome = document.getElementById('nomeInput').value.trim();
-    const whats = document.getElementById('whatsInput').value.trim();
-    const msg = `Oi! Sou ${nome} e quero entrar na fila de espera do Scoop da Quer Brilhar, caso as 5 vagas de lançamento já tenham esgotado. Meu WhatsApp: ${whats}`;
-    const url = `https://wa.me/5581920036867?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
-  });
-</script>
 
 </body>
 </html>
