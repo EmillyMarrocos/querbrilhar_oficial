@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Carrinho · Quer Brilhar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bege: #c3a587;
+    --bege-claro: #f4ede4;
+    --bege-mais-claro: #faf6f0;
+    --preto: #221d18;
+    --branco: #ffffff;
+    --dourado: #a8814f;
+    --linha: rgba(34,29,24,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Poppins',sans-serif;color:var(--preto);background:var(--bege-mais-claro);overflow-x:hidden;}
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;font-weight:500;}
+  a{text-decoration:none;color:inherit;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px;}
+  .eyebrow{font-size:12px;letter-spacing:0.22em;text-transform:uppercase;font-weight:600;color:var(--dourado);}
+  button{font-family:'Poppins',sans-serif;cursor:pointer;}
+
+  .topnav{background:var(--preto);padding:16px 0;position:sticky;top:0;z-index:100;}
+  .topnav .wrap{display:flex;justify-content:space-between;align-items:center;}
+  .brand{font-family:'Fraunces',serif;font-size:19px;color:var(--branco);}
+  .brand b{font-weight:600;}
+  .nav-links{display:flex;gap:28px;align-items:center;}
+  .nav-links a{font-size:13.5px;font-weight:500;color:rgba(255,255,255,0.75);transition:color .2s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--bege);}
+  .nav-ig{font-size:12px;font-weight:500;border:1px solid rgba(255,255,255,0.4);padding:6px 14px;border-radius:100px;color:rgba(255,255,255,0.8);transition:all .2s;}
+  .nav-ig:hover{border-color:var(--bege);color:var(--bege);}
+  .nav-cart{position:relative;font-size:14px;color:rgba(255,255,255,0.85);display:flex;align-items:center;gap:6px;}
+  .nav-cart:hover{color:var(--bege);}
+  .cart-badge{position:absolute;top:-6px;right:-10px;background:var(--dourado);color:var(--branco);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+
+  .cart-page{padding:60px 0 100px;}
+  .cart-page h1{font-size:clamp(28px,4vw,40px);font-style:italic;text-align:center;margin-bottom:40px;}
+  .cart-page h1 b{font-weight:600;color:var(--dourado);font-style:normal;}
+
+  #cartEmpty{text-align:center;padding:60px 0;}
+  #cartEmpty .empty-icon{width:80px;height:80px;border-radius:50%;background:var(--bege-claro);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
+  #cartEmpty .empty-icon svg{width:36px;height:36px;stroke:var(--bege);stroke-width:1.5;fill:none;}
+  #cartEmpty p{font-size:17px;color:#5c5147;margin-bottom:8px;}
+  #cartEmpty a{color:var(--dourado);font-weight:600;border-bottom:1px solid var(--dourado);transition:opacity .2s;}
+  #cartEmpty a:hover{opacity:.7;}
+
+  .cart-item{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--linha);}
+.cart-item-name{font-weight:600;font-size:15px;margin-bottom:2px;}
+.cart-item-variant{font-size:12.5px;color:#8a7c6c;}
+.cart-item-price{font-family:'Fraunces',serif;font-size:16px;color:var(--dourado);margin-top:4px;}
+.qty-control{display:flex;align-items:center;gap:10px;}
+.qty-control button{width:32px;height:32px;border-radius:8px;border:1px solid var(--linha);background:var(--branco);font-size:16px;display:flex;align-items:center;justify-content:center;}
+.qty-control span{font-weight:600;min-width:20px;text-align:center;}
+.cart-item-remove{background:none;border:none;color:#b5453f;font-size:18px;cursor:pointer;margin-left:12px;}
+
+  .cart-item-info{flex:1;}
+  .cart-item-actions{display:flex;align-items:center;gap:16px;}
+
+  .summary-card{background:var(--branco);border:1px solid var(--linha);border-radius:20px;padding:32px;margin-top:36px;}
+  .summary-card h3{font-size:20px;margin-bottom:24px;font-style:italic;}
+  .summary-card h3 b{font-weight:600;color:var(--dourado);font-style:normal;}
+  .summary-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:15px;}
+  .summary-row span:last-child{font-weight:600;}
+  .summary-divider{border:none;border-top:1px solid var(--linha);margin:4px 0;}
+  .summary-total{font-size:18px;font-weight:700;}
+  .summary-total span:last-child{font-family:'Fraunces',serif;font-size:22px;color:var(--dourado);}
+
+  .freight-section{background:var(--bege-mais-claro);border-radius:12px;padding:16px;margin:16px 0;}
+  .freight-section label{font-size:13px;font-weight:600;display:block;margin-bottom:8px;}
+  .freight-row{display:flex;gap:8px;}
+  .freight-row input{flex:1;padding:12px 16px;border:1px solid var(--linha);border-radius:10px;font-family:'Poppins',sans-serif;font-size:14px;outline:none;}
+  .freight-row input:focus{border-color:var(--dourado);}
+  .freight-row button{padding:12px 20px;background:var(--preto);color:var(--branco);border:none;border-radius:10px;font-size:13px;font-weight:600;white-space:nowrap;transition:transform .2s;}
+  .freight-row button:hover{transform:translateY(-1px);}
+  #freightResult{font-size:13px;color:#5c5147;margin-top:8px;min-height:20px;}
+  #freightResult.error{color:#b5453f;}
+
+  .summary-form{margin-top:20px;display:flex;flex-direction:column;gap:14px;}
+  .summary-form label{font-size:13px;font-weight:600;display:block;margin-bottom:6px;}
+  .summary-form input{width:100%;padding:14px 16px;border:1px solid var(--linha);border-radius:12px;font-family:'Poppins',sans-serif;font-size:14px;outline:none;}
+  .summary-form input:focus{border-color:var(--dourado);}
+
+  .payment-section{margin-top:4px;}
+  .payment-section label{font-size:13px;font-weight:600;display:block;margin-bottom:10px;}
+  .payment-options{display:flex;gap:10px;flex-wrap:wrap;}
+  .payment-option{flex:1;min-width:100px;}
+  .payment-option input{display:none;}
+  .payment-option label{display:block;text-align:center;padding:14px 10px;border:1px solid var(--linha);border-radius:12px;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;}
+  .payment-option input:checked+label{border-color:var(--dourado);background:var(--bege-mais-claro);color:var(--dourado);font-weight:600;}
+
+  .btn-checkout{width:100%;margin-top:24px;padding:18px;background:var(--dourado);color:var(--branco);border:none;border-radius:100px;font-size:15px;font-weight:600;transition:transform .25s ease;}
+  .btn-checkout:hover{transform:translateY(-2px);}
+
+  footer{background:var(--preto);color:rgba(255,255,255,0.55);padding:30px 0;font-size:12px;text-align:center;}
+  footer a{color:var(--branco);font-weight:500;}
+
+  .whatsapp-float{position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,0.4);z-index:999;transition:transform .25s ease;}
+  .whatsapp-float:hover{transform:scale(1.1);}
+
+  @media (max-width:860px){
+    .cart-page{padding:40px 0 80px;}
+    .cart-item{flex-direction:column;align-items:flex-start;gap:12px;}
+    .cart-item-actions{width:100%;justify-content:space-between;}
+    .summary-card{padding:24px 20px;}
+    .payment-options{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="wrap">
+    <div class="brand"><b>quer</b> brilhar ✦</div>
+    <div class="nav-links">
+      <a href="index.html">Início</a>
+      <a href="index.html#produtos">Produtos</a>
+      <a href="index.html#contato">Contato</a>
+      <a href="carrinho.html" class="nav-cart">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        <span class="cart-badge" id="navCartCount">0</span>
+      </a>
+      <a class="nav-ig" href="https://www.instagram.com/querbrilhar_oficial/" target="_blank">@querbrilhar_oficial</a>
+    </div>
+  </div>
+</div>
+
+<div class="cart-page">
+  <div class="wrap">
+    <h1>Meu <b>Carrinho</b></h1>
+
+    <div id="cartEmpty">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      </div>
+      <p>Seu carrinho está vazio</p>
+      <a href="index.html#produtos">← Voltar aos produtos</a>
+    </div>
+
+    <div id="cartContent" style="display:none">
+      <div id="cartItems"></div>
+
+      <div class="summary-card">
+        <h3><b>Resumo</b> do pedido</h3>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotalValue">R$ 0,00</span>
+        </div>
+
+        <div class="freight-section">
+          <label>Calcular frete</label>
+          <div class="freight-row">
+            <input type="text" id="cepInput" placeholder="Digite seu CEP" maxlength="9" inputmode="numeric">
+            <button onclick="calcularFreteClick()">Calcular</button>
+          </div>
+          <div id="freightResult"></div>
+        </div>
+
+        <div class="summary-row">
+          <span>Frete</span>
+          <span id="cartFreightValue">calcule o CEP</span>
+        </div>
+
+        <hr class="summary-divider">
+        <hr class="summary-divider">
+
+        <div class="summary-row summary-total">
+          <span>Total</span>
+          <span id="cartTotalValue">R$ 0,00</span>
+        </div>
+
+        <div class="summary-form">
+          <div>
+            <label for="nameInput">Nome completo</label>
+            <input type="text" id="nameInput" placeholder="Seu nome">
+          </div>
+          <div>
+            <label for="addressInput">Endereço completo</label>
+            <input type="text" id="addressInput" placeholder="Rua, número, bairro, cidade - UF">
+          </div>
+        </div>
+
+        <div class="payment-section">
+          <label>Forma de pagamento</label>
+          <div class="payment-options">
+            <div class="payment-option">
+              <input type="radio" name="pagamento" id="payPix" value="Pix" checked>
+              <label for="payPix">Pix</label>
+            </div>
+            <div class="payment-option">
+              <input type="radio" name="pagamento" id="payCredito" value="Crédito">
+              <label for="payCredito">Crédito</label>
+            </div>
+            <div class="payment-option">
+              <input type="radio" name="pagamento" id="payDebito" value="Débito">
+              <label for="payDebito">Débito</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-checkout" onclick="finalizarPedido()">Finalizar Pedido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Quer Brilhar · Bolsas, Acessórios e Semijoias · Paulista/PE</div>
+  </div>
+</footer>
+
+<a href="https://wa.me/5581920036867?text=Oi! Vim pelo site da Quer Brilhar e quero saber mais." target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script src="cart.js"></script>
+<script>
+  let freteValor = 0;
+  let freteCidade = '';
+
+  function calcularFrete(cep) {
+    const clean = cep.replace(/\D/g, '');
+    if (clean.length !== 5 && clean.length !== 8) return null;
+    const p = parseInt(clean.substring(0, 5));
+    if(p>=53000&&p<=53399) return {valor:15,cidade:'Olinda'};
+    if(p>=53400&&p<=53499) return {valor:10,cidade:'Paulista'};
+    if(p>=53500&&p<=53599) return {valor:15,cidade:'Abreu e Lima'};
+    if(p>=53600&&p<=53689) return {valor:15,cidade:'Igarassu'};
+    return null;
+  }
+
+  function calcularFreteClick() {
+    const cep = document.getElementById('cepInput').value.trim();
+    const resultEl = document.getElementById('freightResult');
+    const freightValEl = document.getElementById('cartFreightValue');
+
+    if (cep.replace(/\D/g, '').length < 5) {
+      resultEl.textContent = 'Digite um CEP válido.';
+      resultEl.className = 'error';
+      return;
+    }
+
+    const resultado = calcularFrete(cep);
+    if (!resultado) {
+      resultEl.textContent = 'Não entregamos nessa região ainda.';
+      resultEl.className = 'error';
+      freightValEl.textContent = 'indisponível';
+      freteValor = 0;
+      freteCidade = '';
+      atualizarTotais();
+      return;
+    }
+
+    freteValor = resultado.valor;
+    freteCidade = resultado.cidade;
+    resultEl.textContent = `Entrega em ${resultado.cidade} — R$ ${resultado.valor},00`;
+    resultEl.className = '';
+    freightValEl.textContent = `R$ ${resultado.valor},00`;
+    atualizarTotais();
+  }
+
+  function formatarMoeda(valor) {
+    return 'R$ ' + valor.toFixed(2).replace('.', ',');
+  }
+
+  function atualizarTotais() {
+    const cart = JSON.parse(localStorage.getItem('qb_cart') || '[]');
+    let subtotal = 0;
+    cart.forEach(item => { subtotal += item.price * item.qty; });
+    document.getElementById('cartSubtotalValue').textContent = formatarMoeda(subtotal);
+    document.getElementById('cartTotalValue').textContent = formatarMoeda(subtotal + freteValor);
+
+    const badge = document.getElementById('navCartCount');
+    let totalItems = 0;
+    cart.forEach(item => { totalItems += item.qty; });
+    badge.textContent = totalItems;
+    badge.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+
+  function finalizarPedido() {
+    const cart = JSON.parse(localStorage.getItem('qb_cart') || '[]');
+    if (cart.length === 0) {
+      alert('Seu carrinho está vazio!');
+      return;
+    }
+
+    const nome = document.getElementById('nameInput').value.trim();
+    const endereco = document.getElementById('addressInput').value.trim();
+    const cep = document.getElementById('cepInput').value.trim();
+    const pagamento = document.querySelector('input[name="pagamento"]:checked').value;
+
+    if (!nome) { alert('Por favor, preencha seu nome.'); return; }
+    if (!endereco) { alert('Por favor, preencha seu endereço.'); return; }
+    if (!cep || cep.replace(/\D/g, '').length < 5) { alert('Por favor, preencha seu CEP.'); return; }
+
+    let subtotal = 0;
+    let msg = `*Pedido — Quer Brilhar*\n\n`;
+    msg += `*Itens:*\n`;
+    cart.forEach(item => {
+      const itemTotal = item.price * item.qty;
+      subtotal += itemTotal;
+      msg += `• ${item.name}`;
+      if (item.variant) msg += ` (${item.variant})`;
+      msg += `\n  Qtd: ${item.qty} × ${formatarMoeda(item.price)} = ${formatarMoeda(itemTotal)}\n`;
+    });
+
+    msg += `\n*Subtotal:* ${formatarMoeda(subtotal)}\n`;
+    if (freteValor > 0) {
+      msg += `*Frete (${freteCidade}):* ${formatarMoeda(freteValor)}\n`;
+    } else {
+      msg += `*Frete:* a combinar\n`;
+    }
+    msg += `*Total:* ${formatarMoeda(subtotal + freteValor)}\n`;
+    msg += `\n*Dados:*\n`;
+    msg += `Nome: ${nome}\n`;
+    msg += `Endereço: ${endereco}\n`;
+    msg += `CEP: ${cep}\n`;
+    msg += `Pagamento: ${pagamento}\n`;
+
+    const url = `https://wa.me/5581920036867?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    atualizarTotais();
+  });
+</script>
+
+</body>
+</html>
