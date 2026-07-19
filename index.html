@@ -124,7 +124,7 @@
   .catalog-count{font-size:13px;color:#8a7c6c;margin-bottom:24px;}
 
   .catalog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-  .catalog-card{background:var(--branco);border:1px solid var(--linha);border-radius:16px;padding:20px;transition:transform .25s ease,box-shadow .25s ease;}
+  .catalog-card{background:var(--branco);border:1px solid var(--linha);border-radius:16px;padding:20px;transition:transform .25s ease,box-shadow .25s ease;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;}
   .catalog-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,0.08);}
   .catalog-card .cc-cat{display:inline-block;background:var(--bege-claro);color:var(--dourado);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px;}
   .catalog-card .cc-name{font-size:13.5px;font-weight:500;line-height:1.4;margin-bottom:10px;min-height:38px;}
@@ -381,14 +381,18 @@ countEl.textContent='Mostrando '+Math.min(displayCount,filteredProducts.length)+
 const toShow=filteredProducts.slice(0,displayCount);
 gridEl.innerHTML='';
 toShow.forEach(p=>{
-const card=document.createElement('div');card.className='catalog-card';
-let priceHtml='';
-if(p.promo&&p.pr){priceHtml='<span class="old-price">R$ '+p.p+'</span>R$ '+p.pr;}
-else{priceHtml='R$ '+p.p;}
-const stockClass=p.s>0?'in-stock':'out-stock';
-const stockText=p.s>0?'Em estoque':'Esgotado';
-card.innerHTML='<div class="cc-cat">'+p.c+'</div><div class="cc-name">'+p.n+'</div><div class="cc-price">'+priceHtml+'</div><div class="cc-stock '+stockClass+'">'+stockText+'</div>';
-gridEl.appendChild(card);
+  const card=document.createElement('a');card.className='catalog-card';
+  const priceStr=p.promo&&p.pr?p.pr:p.p;
+  const msg=encodeURIComponent('Oi! Vim pelo site da Quer Brilhar e quero saber mais sobre: '+p.n+' (R$ '+priceStr+')');
+  card.href='https://wa.me/5581920036867?text='+msg;
+  card.target='_blank';
+  let priceHtml='';
+  if(p.promo&&p.pr){priceHtml='<span class="old-price">R$ '+p.p+'</span>R$ '+p.pr;}
+  else{priceHtml='R$ '+p.p;}
+  const stockClass=p.s>0?'in-stock':'out-stock';
+  const stockText=p.s>0?'Em estoque':'Esgotado';
+  card.innerHTML='<div class="cc-cat">'+p.c+'</div><div class="cc-name">'+p.n+'</div><div class="cc-price">'+priceHtml+'</div><div class="cc-stock '+stockClass+'">'+stockText+'</div>';
+  gridEl.appendChild(card);
 });
 verMaisBtn.style.display=displayCount>=filteredProducts.length?'none':'inline-flex';
 }
