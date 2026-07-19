@@ -341,10 +341,33 @@
         <h3 style="margin-top:30px;">5. Calcule o frete pelo CEP</h3>
         <div style="display:flex;gap:10px;align-items:center;">
           <input class="region-select" id="cepInput" type="text" inputmode="numeric" maxlength="9" placeholder="Digite seu CEP (ex: 53400-000)" style="margin-top:0;">
-          <button type="button" id="calcularFreteBtn" style="white-space:nowrap;background:var(--preto);color:var(--branco);border:none;padding:14px 20px;border-radius:12px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;">Calcular</button>
+          <button type="button" id="calcularFreteBtn" style="white-space:nowrap;background:var(--preto);color:var(--branco);border:none;padding:14px 20px;border-radius:12px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;transition:transform .2s ease;">Calcular</button>
         </div>
         <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" style="display:inline-block;font-size:12px;color:var(--dourado);margin-top:8px;text-decoration:underline;">Não sei meu CEP</a>
-        <div id="cepResult" style="font-size:12.5px;color:#8a7c6c;margin-top:8px;line-height:1.5;">Entregamos em Paulista, Olinda, Abreu e Lima e Igarassu.</div>
+        <div id="cepResult" style="margin-top:12px;">
+          <div id="cepDefault" style="font-size:12.5px;color:#8a7c6c;line-height:1.5;">Digite seu CEP para ver o frete e prazo de entrega.</div>
+          <div id="cepLoading" style="display:none;text-align:center;padding:12px;">
+            <div style="width:20px;height:20px;border:2px solid var(--bege);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 8px;"></div>
+            <span style="font-size:12px;color:#8a7c6c;">Calculando frete...</span>
+          </div>
+          <div id="cepSuccess" style="display:none;background:var(--bege-claro);border:1px solid rgba(168,129,79,0.25);border-radius:14px;padding:16px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+              <div>
+                <div style="font-size:11px;font-weight:600;color:var(--dourado);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;" id="freightRegion"></div>
+                <div style="font-size:13px;color:var(--preto);line-height:1.5;" id="freightCity"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--dourado);" id="freightPrice"></div>
+                <div style="font-size:11.5px;color:#5c5147;margin-top:2px;" id="freightTime"></div>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(168,129,79,0.15);font-size:11px;color:#8a7c6c;line-height:1.5;" id="freightNote"></div>
+          </div>
+          <div id="cepError" style="display:none;background:rgba(181,69,63,0.08);border:1px solid rgba(181,69,63,0.2);border-radius:12px;padding:12px 16px;">
+            <span style="font-size:12.5px;color:#8a3f38;" id="freightErrorMsg"></span>
+          </div>
+        </div>
+        <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>
         <div style="margin-top:16px;margin-bottom:24px;">
           <label for="enderecoInput" style="font-size:12.5px;color:#8a7c6c;display:block;margin-bottom:6px;">Endereço completo (rua, número, bairro e complemento) *</label>
           <input class="region-select" id="enderecoInput" type="text" style="margin-top:0;" placeholder="Ex: Rua das Flores, 123, Bairro, apto 45" required>
@@ -520,53 +543,82 @@
   function calcularFrete(cepDigits){
     const prefixo = parseInt(cepDigits.substring(0,5));
     const uf = cepDigits.substring(0,2);
+    const qty = state.qty;
+    const pesoBase = qty * 150;
 
-    if(prefixo >= 53400 && prefixo <= 53499) return {valor: 10, cidade: 'Paulista/PE'};
-    if(prefixo >= 53000 && prefixo <= 53399) return {valor: 15, cidade: 'Olinda/PE'};
-    if(prefixo >= 53500 && prefixo <= 53599) return {valor: 15, cidade: 'Abreu e Lima/PE'};
-    if(prefixo >= 53600 && prefixo <= 53689) return {valor: 15, cidade: 'Igarassu/PE'};
-    if(uf === '50' || uf === '51' || uf === '52' || uf === '53' || uf === '54' || uf === '55' || uf === '56') return {valor: 18, cidade: 'Interior de PE'};
-    if(uf === '57' || uf === '58' || uf === '59' || uf === '48' || uf === '49' || uf === '40' || uf === '41' || uf === '42' || uf === '43' || uf === '44' || uf === '45' || uf === '46' || uf === '47' || uf === '63' || uf === '64') return {valor: 22, cidade: 'Nordeste'};
-    if(uf === '60' || uf === '61' || uf === '62' || uf === '65' || uf === '66' || uf === '67' || uf === '68' || uf === '69' || uf === '77' || uf === '76' || uf === '64') return {valor: 28, cidade: 'Norte/Centro-Oeste'};
-    if(uf === '01' || uf === '02' || uf === '03' || uf === '04' || uf === '05' || uf === '06' || uf === '07' || uf === '08' || uf === '09' || uf === '10' || uf === '11' || uf === '12' || uf === '13' || uf === '14' || uf === '15' || uf === '16' || uf === '17' || uf === '18' || uf === '19') return {valor: 25, cidade: 'São Paulo/SP'};
-    if(uf === '20' || uf === '21' || uf === '22' || uf === '23' || uf === '24' || uf === '25' || uf === '26' || uf === '27' || uf === '28') return {valor: 25, cidade: 'Rio de Janeiro/RJ'};
-    if(uf === '29') return {valor: 25, cidade: 'Espírito Santo/ES'};
-    if(uf === '30' || uf === '31' || uf === '32' || uf === '33' || uf === '34' || uf === '35' || uf === '36' || uf === '37' || uf === '38' || uf === '39') return {valor: 25, cidade: 'Minas Gerais/MG'};
-    if(uf === '80' || uf === '81' || uf === '82' || uf === '83' || uf === '84' || uf === '85' || uf === '86' || uf === '87') return {valor: 28, cidade: 'Paraná/PR'};
-    if(uf === '88' || uf === '89') return {valor: 28, cidade: 'Santa Catarina/SC'};
-    if(uf === '90' || uf === '91' || uf === '92' || uf === '93' || uf === '94' || uf === '95' || uf === '96' || uf === '97' || uf === '98' || uf === '99') return {valor: 28, cidade: 'Rio Grande do Sul/RS'};
-    if(uf === '70' || uf === '71' || uf === '72' || uf === '73' || uf === '74' || uf === '75' || uf === '76' || uf === '78' || uf === '79') return {valor: 26, cidade: 'Centro-Oeste'};
-    if(uf === '64' || uf === '65' || uf ===('66') || uf === '67' || uf === '68' || uf === '69' || uf === '77') return {valor: 30, cidade: 'Norte'};
+    let base = 0, prazo = '', regiao = '', cidade = '';
 
-    return {valor: 28, cidade: 'Brasil'};
+    if(prefixo >= 53400 && prefixo <= 53499){ base = 10; prazo = '1 a 2 dias úteis'; regiao = 'Entrega local'; cidade = 'Paulista/PE'; }
+    else if(prefixo >= 53000 && prefixo <= 53399){ base = 15; prazo = '2 a 3 dias úteis'; regiao = 'Região metropolitana'; cidade = 'Olinda/PE'; }
+    else if(prefixo >= 53500 && prefixo <= 53599){ base = 15; prazo = '2 a 3 dias úteis'; regiao = 'Região metropolitana'; cidade = 'Abreu e Lima/PE'; }
+    else if(prefixo >= 53600 && prefixo <= 53689){ base = 15; prazo = '2 a 3 dias úteis'; regiao = 'Região metropolitana'; cidade = 'Igarassu/PE'; }
+    else if(['50','51','52','53','54','55','56'].includes(uf)){ base = 18; prazo = '3 a 5 dias úteis'; regiao = 'Interior de PE'; cidade = 'Interior de Pernambuco'; }
+    else if(['57','58','59','48','49','40','41','42','43','44','45','46','47','63'].includes(uf)){ base = 22; prazo = '5 a 8 dias úteis'; regiao = 'Nordeste'; cidade = 'Nordeste'; }
+    else if(['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19'].includes(uf)){ base = 25; prazo = '5 a 8 dias úteis'; regiao = 'Sudeste'; cidade = 'São Paulo/SP'; }
+    else if(['20','21','22','23','24','25','26','27','28'].includes(uf)){ base = 25; prazo = '5 a 8 dias úteis'; regiao = 'Sudeste'; cidade = 'Rio de Janeiro/RJ'; }
+    else if(uf === '29'){ base = 25; prazo = '5 a 8 dias úteis'; regiao = 'Sudeste'; cidade = 'Espírito Santo/ES'; }
+    else if(['30','31','32','33','34','35','36','37','38','39'].includes(uf)){ base = 25; prazo = '5 a 8 dias úteis'; regiao = 'Sudeste'; cidade = 'Minas Gerais/MG'; }
+    else if(['80','81','82','83','84','85','86','87'].includes(uf)){ base = 28; prazo = '6 a 10 dias úteis'; regiao = 'Sul'; cidade = 'Paraná/PR'; }
+    else if(['88','89'].includes(uf)){ base = 28; prazo = '6 a 10 dias úteis'; regiao = 'Sul'; cidade = 'Santa Catarina/SC'; }
+    else if(['90','91','92','93','94','95','96','97','98','99'].includes(uf)){ base = 28; prazo = '6 a 10 dias úteis'; regiao = 'Sul'; cidade = 'Rio Grande do Sul/RS'; }
+    else if(['70','71','72','73','74','75','76','78','79'].includes(uf)){ base = 26; prazo = '6 a 10 dias úteis'; regiao = 'Centro-Oeste'; cidade = 'Centro-Oeste'; }
+    else if(['60','61','62','64','65','66','67','68','69','77'].includes(uf)){ base = 30; prazo = '8 a 14 dias úteis'; regiao = 'Norte'; cidade = 'Norte'; }
+    else { base = 28; prazo = '6 a 10 dias úteis'; regiao = 'Brasil'; cidade = 'Brasil'; }
+
+    if(qty >= 3) base += 4;
+    if(qty >= 4) base += 4;
+
+    return {valor: base, prazo: prazo, regiao: regiao, cidade: cidade, peso: pesoBase};
   }
 
   function processarCep(){
     let v = cepInput.value.replace(/\D/g, '').slice(0,8);
     cepInput.value = v.length > 5 ? v.slice(0,5) + '-' + v.slice(5) : v;
 
+    const defaultEl = document.getElementById('cepDefault');
+    const loadingEl = document.getElementById('cepLoading');
+    const successEl = document.getElementById('cepSuccess');
+    const errorEl = document.getElementById('cepError');
+
     if(v.length < 8){
       state.freight = null;
       state.freightLabel = null;
-      cepResult.textContent = 'Digite um CEP completo pra calcular o frete.';
-      cepResult.style.color = '#8a7c6c';
+      defaultEl.style.display = 'block';
+      loadingEl.style.display = 'none';
+      successEl.style.display = 'none';
+      errorEl.style.display = 'none';
       updateCart();
       return;
     }
 
-    const resultado = calcularFrete(v);
-    if(resultado){
-      state.freight = resultado.valor;
-      state.freightLabel = resultado.cidade;
-      cepResult.textContent = `Entrega em ${resultado.cidade}: frete de ${brl(resultado.valor)}.`;
-      cepResult.style.color = '#a8814f';
-    } else {
-      state.freight = null;
-      state.freightLabel = null;
-      cepResult.textContent = 'Não identificamos o CEP. Confira se está correto e tente novamente.';
-      cepResult.style.color = '#b5453f';
-    }
-    updateCart();
+    defaultEl.style.display = 'none';
+    loadingEl.style.display = 'block';
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+
+    setTimeout(function(){
+      const resultado = calcularFrete(v);
+      loadingEl.style.display = 'none';
+
+      if(resultado){
+        state.freight = resultado.valor;
+        state.freightLabel = resultado.cidade;
+
+        document.getElementById('freightRegion').textContent = resultado.regiao;
+        document.getElementById('freightCity').textContent = resultado.cidade;
+        document.getElementById('freightPrice').textContent = brl(resultado.valor);
+        document.getElementById('freightTime').textContent = resultado.prazo;
+        document.getElementById('freightNote').textContent = `Peso estimado: ${resultado.peso}g (${state.qty} scoop${state.qty > 1 ? 's' : ''}). Frete via Correios PAC. Valores aproximados — valor final confirmado no WhatsApp.`;
+
+        successEl.style.display = 'block';
+      } else {
+        state.freight = null;
+        state.freightLabel = null;
+        document.getElementById('freightErrorMsg').textContent = 'Não identificamos o CEP. Confira se está correto e tente novamente.';
+        errorEl.style.display = 'block';
+      }
+      updateCart();
+    }, 600);
   }
 
   cepInput.addEventListener('input', processarCep);
