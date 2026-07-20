@@ -200,7 +200,7 @@
 <section id="lancamento">
   <div class="wrap">
     <div class="waitlist" style="background:var(--preto);">
-      <h2 style="color:var(--branco);">Só 5 vagas com brinde</h2>
+      <h2 style="color:var(--branco);">Só 4 vagas com brinde</h2>
       <p style="color:rgba(255,255,255,0.88);">As 5 primeiras clientes da leva de lançamento ganham uma necessaire de brinde. Depois volta ao preço cheio, sem brinde.</p>
       <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
         <a class="btn-primary" href="#montar">
@@ -434,7 +434,7 @@
       </div>
       <div class="mini-card">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a8814f" stroke-width="1.5"><path d="M12 2 14.3 9.3 22 12l-7.7 2.7L12 22l-2.3-7.3L2 12l7.7-2.7L12 2Z"/></svg></div>
-        <h4>Só 5 vagas com brinde</h4>
+        <h4>Só 4 vagas com brinde</h4>
         <p>As 5 primeiras clientes da leva de lançamento ganham uma necessaire. Depois volta ao preço cheio, sem brinde.</p>
       </div>
     </div>
@@ -444,7 +444,7 @@
 <section id="lista">
   <div class="wrap">
     <div class="waitlist">
-      <h2>As 5 vagas esgotaram?</h2>
+      <h2>As 4 vagas esgotaram?</h2>
       <p>As 5 primeiras clientes já garantem o scoop com necessaire de brinde. Se essas vagas acabarem antes de você, deixa seu nome aqui que você entra na fila e é chamada assim que abrir a próxima leva.</p>
       <form class="form" id="waitlistForm">
         <input type="text" id="nomeInput" placeholder="Seu nome" required>
@@ -699,7 +699,7 @@
     e.preventDefault();
     const nome = document.getElementById('nomeInput').value.trim();
     const whats = document.getElementById('whatsInput').value.trim();
-    const msg = `Oi! Sou ${nome} e quero entrar na fila de espera do Scoop da Quer Brilhar, caso as 5 vagas de lançamento já tenham esgotado. Meu WhatsApp: ${whats}`;
+    const msg = `Oi! Sou ${nome} e quero entrar na fila de espera do Scoop da Quer Brilhar, caso as 4 vagas de lançamento já tenham esgotado. Meu WhatsApp: ${whats}`;
     const url = `https://wa.me/5581920036867?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
   });
